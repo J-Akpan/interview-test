@@ -5,7 +5,7 @@ dotenv.config()
 
 // Custom request interface to include user property
 export interface AuthRequest extends Request {
-    user?: JwtPayload & { userId: string, nickName: string, contactNumber: string };
+    user?: JwtPayload & { userId: string, email: string, role: string, name: string  };
 }
 
 // Middleware to authenticate user using JWT
@@ -20,7 +20,7 @@ export const authenticateUser = (req: AuthRequest, res: Response, next: NextFunc
 
         const privateKey = process.env.privateKey as string
         const decoded = jwt.verify(token, privateKey) as JwtPayload & {
-            userId: string, nickName: string, contactNumber: string
+            userId: string, email: string, role: string, name: string
         };
         req.user = decoded
         next()

@@ -6,8 +6,8 @@ import { registerUser, updateUser, deleteUser, getUser, getAllUsers } from '../c
 const userRoutes: express.Router = express.Router()
 
 userRoutes.post('/register', registerUser)
-userRoutes.put('/update', updateUser)
-userRoutes.delete('/delete', deleteUser)
+userRoutes.put('/update', authenticateUser, updateUser)
+userRoutes.delete('/delete', authenticateUser, deleteUser)
 userRoutes.get('/get', getUser)
 userRoutes.get('/all', getAllUsers)
 

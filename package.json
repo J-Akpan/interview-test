@@ -4,9 +4,8 @@
   "description": "",
   "main": "dist/app.js",
   "scripts": {
-    "dev": "nodemon --watch './**/*' --ext ts,js --exec ts-node ./app.ts",
     "build": "tsc",
-    "start": "nodemon --watch './**/*' --ext ts,js --exec ts-node ./app.ts",
+    "start": "nodemon app.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
