@@ -8,15 +8,6 @@ dotenv.config();
 import User from "../models/Users";
 import { addUserValidation, updateUserValidation, deleteUserValication } from "../validation/userValidation"
 
-//register user
-// @desc Register a new user
-// @route POST /api/users/register
-// @access Public
-
-// logic flow
-// 1. Receive user details from request body
-// 2. Hash the nickName using bcrypt
-// 3. Create a new user record in the database with the hashed nickName
 
 export const registerUser = async (req: Request, res: Response) => {
     try {
