@@ -2,11 +2,11 @@
 import { Request, Response } from "express";
 import { AuthRequest } from "../middleware/authMiddleware";
 import dotenv from "dotenv";
-import { Op, ValidationError } from "sequelize";
+import { Op, ValidationError, where } from "sequelize";
 import { getSystemErrorMap } from "util";
 dotenv.config();
 import User from "../models/Users";
-import { addUserValidation } from "../validation/userValidation"
+import { addUserValidation, updateUserValidation } from "../validation/userValidation"
 
 //register user
 // @desc Register a new user
@@ -41,15 +41,16 @@ export const registerUser = async (req: Request, res: Response) => {
             name,
             email,
             avatar,
-            role,
             experience,
             education,
             educationStartYear,
             educationEndYear,
             schoolName,
-            certification
+            certification,
+            role
         })
         if (user) {
+
             return res.status(201).json({ msg: "User created successfully", user })
         }
         return res.status(400).json({ msg: "Invalid user data" })
@@ -57,5 +58,52 @@ export const registerUser = async (req: Request, res: Response) => {
     } catch (error) {
         console.log(error)
         res.status(500).json({ msg: "Server error" })
+    }
+}
+
+
+// update user information
+export const updateUser = async (req: AuthRequest, res: Response) => {
+    try {
+        const {
+            name, email,
+            role, experience, education,
+            educationStartYear, educationEndYear,
+            schoolName, certification } = req.body
+
+        // validate input
+        const { error } = updateUserValidation.validate(req.body)
+        if (error) {
+            return res.status(400).json({ msg: error.details[0]?.message })
+        }
+        // check if user exist
+        const user = await User.findOne({ where: { email } })
+        if (!user) {
+            return res.status(404).json({ msg: "User not found" })
+        }
+
+        // userId
+        const userId = user.getDataValue('userId')
+        console.log(userId)
+
+
+        // update user
+        const updatedUser = await User.update({
+            name, role, experience, education,
+            educationStartYear, educationEndYear,
+            schoolName, certification
+        }, {
+            where: { userId }
+        })
+        if (updatedUser) {
+            return res.status(200).json({ msg: "User updated successfully" })
+        }
+        return res.status(400).json({ msg: "Invalid user data" })
+
+
+    } catch (error) {
+        console.log(error)
+        return res.status(500).json({ msg: "Server error" })
+
     }
 }
