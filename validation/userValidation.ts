@@ -27,3 +27,7 @@ export const updateUserValidation = Joi.object({
     certification: Joi.string().optional(),
 
 })
+
+export const deleteUserValication = Joi.object({
+    email: Joi.string().email().required(),
+})

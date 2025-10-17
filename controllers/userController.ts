@@ -6,7 +6,7 @@ import { Op, ValidationError, where } from "sequelize";
 import { getSystemErrorMap } from "util";
 dotenv.config();
 import User from "../models/Users";
-import { addUserValidation, updateUserValidation } from "../validation/userValidation"
+import { addUserValidation, updateUserValidation, deleteUserValication } from "../validation/userValidation"
 
 //register user
 // @desc Register a new user
@@ -106,4 +106,39 @@ export const updateUser = async (req: AuthRequest, res: Response) => {
         return res.status(500).json({ msg: "Server error" })
 
     }
+}
+
+// delete user
+export const deleteUser = async (req: Request, res: Response) => {
+
+
+    try {
+        const { email } = req.body
+        // validate input
+        const { error } = deleteUserValication.validate(req.body)
+        if (error) {
+            return res.status(400).json({ msg: error.details[0]?.message })
+        }
+
+        // check if user exist
+        const user = await User.findOne({ where: { email } })
+        if (!user) {
+            return res.status(404).json({ msg: "User not found" })
+        }
+
+        // delete user
+        const deletedUser = await User.destroy({ where: { email } })
+        if (deletedUser) {
+            return res.status(200).json({ msg: "User deleted successfully" })
+        }
+        return res.status(400).json({ msg: "Invalid user data" })
+
+
+
+
+    } catch (error) {
+        console.log(error)
+        return res.status(500).json({ msg: "Server error" })
+    }
+
 }
