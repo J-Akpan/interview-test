@@ -138,3 +138,26 @@ export const deleteUser = async (req: Request, res: Response) => {
     }
 
 }
+
+
+//get a particular user
+export const getUser = async (req: Request, res: Response) => {
+    try {
+        const { email } = req.body
+        // validate input
+        const { error } = deleteUserValication.validate(req.body)
+        if (error) {
+            return res.status(400).json({ msg: error.details[0]?.message })
+        }
+
+        // check if user exist
+        const user = await User.findOne({ where: { email } })
+        if (!user) {
+            return res.status(404).json({ msg: "User not found" })
+        }
+        return res.status(200).json({ msg: "User found", user })
+    } catch (error) {
+        console.log(error)
+        return res.status(500).json({ msg: "Server error" })
+    }
+}
