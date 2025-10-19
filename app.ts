@@ -3,6 +3,7 @@ import dotenv from 'dotenv';
 import db_connect from './config/db_config';
 dotenv.config();
 import userRoutes from './routes/usersRoute';
+import tutorRoutes from './routes/tutorRoute';
 
 
 //create instace of express app
@@ -15,6 +16,7 @@ app.use(express.urlencoded({ extended: true }));
 
 //use routes
 app.use('/user', userRoutes)
+app.use('/tutor', tutorRoutes)
 
 
 //start the server

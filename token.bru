@@ -1,0 +1,22 @@
+meta {
+  name: New HTTP Request
+  type: http
+  seq: 1
+}
+
+post {
+  url: http://localhost:3000/user/token
+  body: json
+  auth: none
+}
+
+headers {
+  Content-Type: application/json
+  Authorization: 
+}
+
+body:json {
+  {
+    "email":"jak@gmail.com"
+  }
+}

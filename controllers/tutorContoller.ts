@@ -9,17 +9,14 @@ import User from "../models/Users";
 import { addUserValidation, updateUserValidation, deleteUserValication } from "../validation/userValidation"
 
 
-//register user
-// @desc Register a new user
-// @route POST /api/users/register
-// @access Public
+//this is to create details where user register as tutor
+export const registerTutor = async (req: AuthRequest, res: Response) => {
+    try {
+        const { bio, tutoredCourse } = req.body;
+        const userId = req.user?.userId
 
-// export const registerUser = async (req: Request, res: Response) => {
-//     try {
-//         const
-        
-//     } catch (error) {
-//         console.log(error)
-//         res.status(500).json({ msg: "Server error" })
-//     }
-// }
+    } catch (error) {
+        console.log(error)
+        res.status(500).json({ msg: "Server error" })
+    }
+}

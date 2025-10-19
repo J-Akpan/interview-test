@@ -43,13 +43,7 @@ export const registerUser = async (req: Request, res: Response) => {
             role
         })
         if (user) {
-            // generate token
-            const token = jwt.sign(
-                { userId: user.userId, email: user.email, role: user.role, name: user.name },
-                process.env.privateKey as string,
-                { expiresIn: "1h" }
-            );
-            return res.status(201).json({ msg: "User created successfully", user, token })
+            return res.status(201).json({ msg: "User created successfully", user })
         }
         return res.status(400).json({ msg: "Invalid user data" })
 
@@ -164,5 +158,35 @@ export const getAllUsers = async (req: Request, res: Response) => {
     } catch (error) {
         console.log(error)
         return res.status(500).json({ msg: "Server error" })
+    }
+}
+
+export const getToken = async (req: Request, res: Response) => {
+    try {
+        const { email } = req.body;
+
+        // req.body Validation
+        const { error } = deleteUserValication.validate(req.body);
+        if (error) {
+            return res.status(400).json({ msg: error.details[0]?.message });
+        }
+
+        // check if user exist
+        const user = await User.findOne({ where: { email } });
+        if (!user) {
+            return res.status(404).json({ msg: "User not found" });
+        }
+
+        // generate token
+        const token = jwt.sign(
+            { userId: user.userId, email: user.email, role: user.role, name: user.name },
+            process.env.privateKey as string,
+            { expiresIn: "1h" }
+        );
+        return res.status(200).json({ msg: "Token generated successfully", token });
+
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({ msg: "Server error" });
     }
 }
